@@ -1,5 +1,5 @@
 python-okx
-numpy 
+numpy>=1.24
 pandas
 aiofiles
 scikit-learn>=1.2.0
