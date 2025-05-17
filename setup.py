@@ -1,0 +1,11 @@
+apikey = "fac50589-1702-4ecf-8e62-336713d56104"
+secretkey = "2BB62A08F3912CAE2BAB5F1073E155F3"
+IP = ""
+API key name = "go_project"
+Permissions = "Read/Withdraw"
+
+apikey = "ff6a1179-60f2-4a90-8dae-3fc3b981402c"
+secretkey = "67435458D6B3E1AD763B846C4384C921"
+IP = ""
+API key name = "Project_go"
+Permissions = "Read"

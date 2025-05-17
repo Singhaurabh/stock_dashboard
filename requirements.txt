@@ -1,0 +1,10 @@
+python-okx
+numpy 
+pandas
+aiofiles
+scikit-learn
+websocket 
+json
+threading
+streamlit
+request
