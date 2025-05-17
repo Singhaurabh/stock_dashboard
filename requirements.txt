@@ -2,9 +2,8 @@ python-okx
 numpy 
 pandas
 aiofiles
-scikit-learn
+scikit-learn>=1.2.0
 websocket 
-json
 threading
 streamlit
 request
