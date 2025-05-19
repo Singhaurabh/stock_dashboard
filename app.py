@@ -6,11 +6,12 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import time
+import logger
 import requests
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import QuantileRegressor
 
-# --- UI SETUP ---
+# UI SETUP ---
 st.set_page_config(layout="wide")
 st.title('Real-Time Crypto Order Book Simulator with Models')
 
@@ -44,6 +45,29 @@ quant_reg = QuantileRegressor(quantile=0.5, alpha=0.1)
 quant_reg.coef_ = np.array([0.0003])
 quant_reg.intercept_ = 0.01
 
+## importing the logger file
+
+from logger import log_latency_to_csv  # if saved separately
+
+# Timing sections
+start_time = time.time()
+# processing... e.g., parsing data, updating DF
+processing_latency = time.time() - start_time
+
+# UI rendering(storing the start time of the  ui)
+ui_start = time.time()
+# calculating the ui latency
+ui_latency = time.time() - ui_start
+# calculating the total latency
+total_latency = time.time() - start_time
+
+# Log all
+log_latency_to_csv(
+    processing_latency * 1000,
+    ui_latency * 1000,
+    total_latency * 1000
+)
+
 # Encoding helpers
 def encode_volatility(vol):
     mapping = {'Low': 0, 'Medium': 1, 'High': 2}
@@ -52,12 +76,12 @@ def encode_volatility(vol):
 def encode_fee_tier(tier):
     return 0 if 'Tier1' in tier else 1
 
-# === Model implementations ===
+# Model implementations
 def almgren_chriss_impact(quantity):
     return gamma * quantity + eta * (quantity ** 2)
 
 def quantile_slippage(quantity, volatility_encoded):
-    # Mock implementation: intercept + coef * quantity adjusted by volatility
+    # Mock implementation: intercept + coef * quantity adjusted by volatility - Bascially a formula for calculating the slippage
     base_slip = quant_reg.intercept_ + quant_reg.coef_[0] * quantity
     volatility_factor = 1 + 0.05 * volatility_encoded  # slight increase with volatility
     return max(base_slip * volatility_factor, 0)
@@ -75,12 +99,14 @@ def calculate_expected_fees(quantity_usd, fee_tier):
 def calculate_latency(start_time):
     return round((time.time() - start_time) * 1000, 2)  # ms
 
-# === WebSocket Handler ===
+# WebSocket Handler
 def run_websocket():
     uri = f"wss://ws.gomarket-cpp.goquant.io/ws/l2-orderbook/okx/{spot_asset}"
 
     async def connect():
         async with websockets.connect(uri) as websocket:
+            # Latency Benchmarking
+            # Data Processing Latency
             while True:
                 start_time = time.time()
                 msg = await websocket.recv()
@@ -98,12 +124,17 @@ def run_websocket():
                 vol_enc = encode_volatility(volatility)
                 fee_enc = encode_fee_tier(fee_tier)
 
+                #Model Processing
+
                 slippage = quantile_slippage(quantity_usd, vol_enc)
                 fees = calculate_expected_fees(quantity_usd, fee_tier)
                 impact = almgren_chriss_impact(quantity_usd)
                 maker_taker_ratio = logistic_maker_taker(vol_enc, fee_enc)
                 latency = calculate_latency(start_time)
                 net_cost = slippage + fees + impact
+
+                proceesing_latency = time.time()-start_time
+                #Data processing end's here
 
                 output_data = {
                     "Expected Slippage": f"${slippage:.4f}",
@@ -113,6 +144,7 @@ def run_websocket():
                     "Internal Latency": f"{latency} ms",
                     "Net Cost": f"${net_cost:.4f}"
                 }
+
 
     asyncio.run(connect())
 
