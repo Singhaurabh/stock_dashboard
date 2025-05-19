@@ -13,7 +13,7 @@ from sklearn.linear_model import QuantileRegressor
 
 # UI SETUP ---
 st.set_page_config(layout="wide")
-st.title('Real-Time Crypto Order Book Simulator with Models')
+st.title('Real-Time Crypto Order Book Simulator and Analytics using OKX Exchange')
 
 with st.sidebar:
     exchange = st.selectbox("Exchange", ['OKX'])
