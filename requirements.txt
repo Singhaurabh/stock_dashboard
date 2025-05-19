@@ -5,4 +5,4 @@ aiofiles
 scikit-learn
 websocket 
 streamlit
-request
+requests
