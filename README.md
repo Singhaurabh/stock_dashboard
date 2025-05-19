@@ -1,5 +1,8 @@
-"# stock_dashboard" 
+### Stock Dashboard Documentation
+
 1.---------------------------------------------------------------------------------------------------------------------------
+
+
 # Model Selection and Parameters
 This project implements three core models:
 
@@ -30,7 +33,10 @@ Why we use this model?
 -It mathematically models market impact in a realistic, interpretable way.
 -It’s widely used in institutional trading and high-frequency strategies.
 -It offers a clear method to incorporate execution cost into trading and portfolio decisions.
+
 2.---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 ## B. Regression Techniques Chosen
 A. Quantile Regression (for Slippage Estimation)
 Why Quantile Regression?
@@ -63,7 +69,10 @@ Mock Parameters Used:
 coef_ = [[1.5, -1.0]]
 intercept_ = [0.2]
 classes_ = [0, 1]
+
 3. ------------------------------------------------------------------------------------------------------------------------------------------------
+
+   
 ## C. Market Impact Calculation Methodology
 The Almgren-Chriss model is at the heart of the impact calculation.
 
@@ -76,7 +85,10 @@ The market impact rises linearly and quadratically with the trade size.
 Captures price movement risk and liquidity drag due to aggressive orders.
 Tradeoffs modeled: faster execution = higher impact.
 This is especially useful in execution algorithms, high-frequency trading, or institutional trading desks.
+
 4.---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 ## Performance Optimization Approaches
 The system is designed to be real-time and efficient, using the following techniques:
 
