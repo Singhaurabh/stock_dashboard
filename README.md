@@ -107,6 +107,6 @@ F. Latency Benchmarking
 Captured using three timers:
 
 Processing latency: Time to parse + compute models
-UI update latency: Time to prepare and render metrics
+UI update latency: Time to prepare and render metrics   
 Total latency: End-to-end WebSocket → UI cycle
 

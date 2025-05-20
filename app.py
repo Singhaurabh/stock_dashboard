@@ -1,4 +1,4 @@
-import asyncio
+import asyncio 
 import websockets
 import json
 import threading
@@ -16,7 +16,7 @@ st.set_page_config(layout="wide")
 
 st.title('Real-Time Crypto Order Book Simulator and Analytics using OKX Exchange')
 
-
+## Input functions 
 with st.sidebar:
     exchange = st.selectbox("Exchange", ['OKX'])
     spot_asset = st.selectbox("Spot Asset", ['BTC-USDT-SWAP'])
@@ -84,6 +84,7 @@ def almgren_chriss_impact(quantity):
 
 def quantile_slippage(quantity, volatility_encoded):
     # Mock implementation: intercept + coef * quantity adjusted by volatility - Bascially a formula for calculating the slippage
+    # Here we used the Quantile Regression slippage techniques which is a machine learning model.
     base_slip = quant_reg.intercept_ + quant_reg.coef_[0] * quantity
     volatility_factor = 1 + 0.05 * volatility_encoded  # slight increase with volatility
     return max(base_slip * volatility_factor, 0)
@@ -122,8 +123,11 @@ def run_websocket():
 
                 global orderbook_df, output_data
                 orderbook_df = combined
-
-                vol_enc = encode_volatility(volatility)
+                ## Here, we use an encoding technique that assigns numerical values to categorical text labels: 
+                # 'low' is encoded as 0, 'mid' as 1, and 'high' as 2. 
+                # This encoding enables faster processing and retrieval of data from the dataset.
+                # and encode_volatility function is written above in the Encoding helper section
+                vol_enc = encode_volatility(volatility) 
                 fee_enc = encode_fee_tier(fee_tier)
 
                 #Model Processing
@@ -136,7 +140,6 @@ def run_websocket():
                 net_cost = slippage + fees + impact
 
                 proceesing_latency = time.time()-start_time
-                #Data processing end's here
 
                 output_data = {
                     "Expected Slippage": f"${slippage:.4f}",
